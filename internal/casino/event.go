@@ -9,6 +9,11 @@ var EventTypes = []string{
 	"game_stop",
 }
 
+// Event field HasWon has to be *bool, as there is a need to distinguish between undefined and false values,
+// because of clearness of stored data (field is only relevant for 'bet' type),
+// and in JSON representation omitempty for bool would omit false values
+// description is not used, so it is kicked out
+
 type Event struct {
 	ID       int `json:"id"`
 	PlayerID int `json:"player_id"`
@@ -27,11 +32,10 @@ type Event struct {
 	Currency string `json:"currency,omitempty"`
 
 	// Only for type `bet`.
-	HasWon bool `json:"has_won,omitempty"`
+	HasWon *bool `json:"has_won,omitempty"`
 
 	CreatedAt time.Time `json:"created_at"`
 
-	AmountEUR   int    `json:"amount_eur,omitempty"`
-	Player      Player `json:"player,omitempty"`
-	Description string `json:"description"`
+	AmountEUR int    `json:"amount_eur,omitempty"`
+	Player    Player `json:"player,omitempty"`
 }

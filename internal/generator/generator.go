@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/Bitstarz-eng/event-processing-challenge/internal/casino"
+	"github.com/TomasCruz/event-processing/internal/casino"
 )
 
 func Generate(ctx context.Context) <-chan casino.Event {
@@ -35,14 +35,22 @@ func Generate(ctx context.Context) <-chan casino.Event {
 func generate(id int) casino.Event {
 	amount, currency := randomAmountCurrency()
 
+	// has_won field only make sense for bet type
+	typ := randomType()
+	var hasWon *bool
+	if typ == "bet" {
+		won := randomHasWon()
+		hasWon = &won
+	}
+
 	return casino.Event{
 		ID:        id,
 		PlayerID:  10 + rand.Intn(10),
 		GameID:    100 + rand.Intn(10),
-		Type:      randomType(),
+		Type:      typ,
 		Amount:    amount,
 		Currency:  currency,
-		HasWon:    randomHasWon(),
+		HasWon:    hasWon,
 		CreatedAt: time.Now(),
 	}
 }
